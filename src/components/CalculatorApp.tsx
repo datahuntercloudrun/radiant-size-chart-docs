@@ -225,13 +225,23 @@ export default function CalculatorApp() {
                   const pred = predictMeasurement(key, general);
                   if (!pred) return null;
                   const c = coeffs[key];
+                  // For chest/waist/hip, show body-shape-adjusted value
+                  const sliderMap: Record<string, number> = { chest: torso, waist: waist, hip: hip };
+                  const hasSlider = key in sliderMap;
+                  const sliderAdj = hasSlider ? (sliderMap[key] - 3) * c.se : 0;
+                  const displayValue = pred.predicted + sliderAdj;
                   return (
-                    <div key={key} className="rsc-meas-card">
+                    <div key={key} className={`rsc-meas-card${hasSlider ? " rsc-meas-card--adjusted" : ""}`}>
                       <div className="rsc-meas-card-name">
                         {MEASUREMENT_LABELS[key] || key}
+                        {hasSlider && sliderAdj !== 0 && (
+                          <span style={{ fontSize: "0.7rem", marginLeft: 4, color: sliderAdj > 0 ? "#f59e0b" : "#06b6d4" }}>
+                            {sliderAdj > 0 ? "+" : ""}{sliderAdj.toFixed(1)}
+                          </span>
+                        )}
                       </div>
                       <div className="rsc-meas-card-value">
-                        {pred.predicted.toFixed(1)}
+                        {displayValue.toFixed(1)}
                         <span className="rsc-meas-card-unit"> cm</span>
                       </div>
                       <div className="rsc-meas-card-r2">
@@ -281,6 +291,7 @@ export default function CalculatorApp() {
           {(() => {
             const pred = predictMeasurement("chest", general);
             if (!pred) return null;
+            const chestSliderAdj = (torso - 3) * pred.coeffs.se;
             const items = [
               { label: "Intercept", value: pred.contributions.intercept },
               {
@@ -299,6 +310,10 @@ export default function CalculatorApp() {
                 label: `BMI (${bmi.toFixed(2)})`,
                 value: pred.contributions.bmi,
               },
+              ...(chestSliderAdj !== 0 ? [{
+                label: `Forma corporal (${sliderLabel(torso)})`,
+                value: chestSliderAdj,
+              }] : []),
             ];
             const total = items.reduce((s, i) => s + i.value, 0);
 
@@ -314,6 +329,7 @@ export default function CalculatorApp() {
                         "#f59e0b",
                         "#ec4899",
                         "#06b6d4",
+                        "#a855f7",
                       ];
                       const pct = (item.value / total) * 100;
                       return (

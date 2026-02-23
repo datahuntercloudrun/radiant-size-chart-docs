@@ -1,0 +1,102 @@
+---
+sidebar_position: 7
+title: Precisión y Validación
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
+# Precisión y Validación
+
+## Qué Significan R² y SE
+
+Antes de ver los números, entendamos qué miden:
+
+### R² (Coeficiente de Determinación)
+
+<div className="rsc-insight">
+<strong>En términos simples:</strong> Si R² = 0.88 (88%), significa que nuestra fórmula puede predecir el 88% de las diferencias de pecho entre personas. El 12% restante son variaciones únicas de cada individuo — como tener más músculo o más grasa en el pecho. Eso lo capturamos con los sliders.
+</div>
+
+- **R² = 1.0** → La fórmula predice perfectamente (imposible en biología)
+- **R² > 0.70** → Excelente para aplicaciones antropométricas
+- **R² 0.50-0.70** → Buena, útil con los sliders de ajuste
+- **R² < 0.50** → Limitada, pero aún mejor que no tener dato
+
+### SE (Error Estándar)
+
+El SE indica el **margen de error típico** en centímetros:
+- El 68% de las personas reales estarán dentro de ±1 SE del valor predicho
+- El 95% estarán dentro de ±2 SE
+- El 99.7% estarán dentro de ±3 SE
+
+## Desglose por Nivel de Confianza
+
+<BrowserOnly>
+  {() => {
+    const AccuracyChart = require('@site/src/components/AccuracyChart').default;
+    return <AccuracyChart />;
+  }}
+</BrowserOnly>
+
+## La Garantía del 95%
+
+Nuestros sliders de forma corporal cubren **±2 SE**, lo que estadísticamente abarca el **95% de la variación individual**. Esto significa:
+
+| Medida | SE | Rango slider (±2 SE) | Cobertura |
+|---|---|---|---|
+| Pecho | 3.06 cm | ±6.12 cm | 95% de hombres |
+| Cintura | 4.05 cm | ±8.10 cm | 95% de hombres |
+| Cadera | 2.56 cm | ±5.12 cm | 95% de hombres |
+
+## Precisión vs Necesidad Real
+
+La pregunta clave no es "qué tan preciso es nuestro modelo" sino "¿es **suficientemente preciso** para recomendar la talla correcta?"
+
+### Rangos Típicos de Tallas
+
+| Medida | Rango entre tallas | Nuestro SE | Ratio |
+|---|---|---|---|
+| Pecho | 6-8 cm | 3.06 cm | 2:1 a 2.6:1 |
+| Cintura | 8-10 cm | 4.05 cm | 2:1 a 2.5:1 |
+| Cadera | 6 cm | 2.56 cm | 2.3:1 |
+| Entrepierna | 2-3 cm | 2.34 cm | ~1:1 |
+
+<div className="rsc-insight">
+<strong>Clave:</strong> Para pecho, cintura y cadera (las medidas más críticas), nuestro error estándar es <strong>2-2.6 veces menor</strong> que el rango entre tallas. Esto significa que incluso sin sliders, la predicción base ya ubica correctamente al usuario dentro del rango de su talla en la mayoría de los casos.
+</div>
+
+## Validación Cruzada
+
+Los modelos fueron validados con **5-fold cross-validation** sobre el dataset ANSUR II:
+
+1. Se divide el dataset en 5 partes iguales
+2. Se entrena con 4 partes y se prueba con la 5ta
+3. Se repite 5 veces, cada parte sirviendo como test una vez
+4. Los R² reportados son el **promedio de las 5 iteraciones**
+
+Esto garantiza que los R² no están inflados por overfitting.
+
+## Limitaciones Honestas
+
+Somos transparentes sobre dónde nuestro modelo tiene limitaciones:
+
+### Medidas con R² bajo
+- **Cabeza** (R²=28%): La circunferencia craneal tiene poca correlación con altura/peso. Para sombreros, los sliders ayudan poco.
+- **Ancho de pie** (R²=37%): Los pies son altamente variables. Recomendamos que las tiendas de calzado incluyan medidas directas cuando sea posible.
+
+### Tipos de cuerpo extremos
+- Fisiculturistas, atletas de élite y personas con condiciones médicas pueden caer fuera del rango ±2 SE
+- Los sliders en extremo (1 o 5) mitigan parcialmente, pero no completamente
+
+### Edad
+- ANSUR II midió principalmente adultos de 18-45 años
+- Las predicciones para personas mayores de 60 pueden ser menos precisas
+
+### Representatividad
+- El dataset es mayoritariamente de la población estadounidense
+- Las proporciones corporales pueden variar en poblaciones asiáticas, africanas o latinoamericanas
+- Sin embargo, ANSUR II es el dataset más diverso disponible públicamente
+
+---
+
+**Siguiente:** [Análisis Competitivo →](/algorithm/competitive-analysis)

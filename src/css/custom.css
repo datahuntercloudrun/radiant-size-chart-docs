@@ -1,0 +1,647 @@
+/* ── Radiant Size Chart — Teal/Gold Theme ── */
+
+:root {
+  --ifm-color-primary: #1b7e59;
+  --ifm-color-primary-dark: #166a4b;
+  --ifm-color-primary-darker: #125c41;
+  --ifm-color-primary-darkest: #0d4a34;
+  --ifm-color-primary-light: #219b6d;
+  --ifm-color-primary-lighter: #26a877;
+  --ifm-color-primary-lightest: #32c48d;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(27, 126, 89, 0.1);
+
+  --rsc-gold: #edba2e;
+  --rsc-gold-light: #f5d47a;
+  --rsc-gold-bg: #fef9e7;
+  --rsc-teal: #1b7e59;
+  --rsc-teal-light: #e8f5f0;
+  --rsc-green: #467f4d;
+  --rsc-red: #dc2626;
+  --rsc-orange: #f59e0b;
+  --rsc-green-fit: #22c55e;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #32c48d;
+  --ifm-color-primary-dark: #26a877;
+  --ifm-color-primary-darker: #219b6d;
+  --ifm-color-primary-darkest: #1b7e59;
+  --ifm-color-primary-light: #4dd4a0;
+  --ifm-color-primary-lighter: #72e0b5;
+  --ifm-color-primary-lightest: #a3edcf;
+  --docusaurus-highlighted-code-line-bg: rgba(50, 196, 141, 0.15);
+
+  --rsc-gold-bg: rgba(237, 186, 46, 0.1);
+  --rsc-teal-light: rgba(27, 126, 89, 0.15);
+}
+
+/* ── Hero Banner ── */
+.rsc-hero {
+  background: linear-gradient(135deg, #0d4a34 0%, #1b7e59 50%, #219b6d 100%);
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.rsc-hero h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+.rsc-hero p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+.rsc-hero-cta {
+  display: inline-block;
+  background: var(--rsc-gold);
+  color: #1a1a1a;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.rsc-hero-cta:hover {
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+/* ── Stat Cards ── */
+.rsc-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.rsc-stat-card {
+  background: var(--rsc-teal-light);
+  border: 1px solid rgba(27, 126, 89, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+[data-theme='dark'] .rsc-stat-card {
+  background: rgba(27, 126, 89, 0.1);
+  border-color: rgba(50, 196, 141, 0.2);
+}
+.rsc-stat-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--rsc-teal);
+  line-height: 1;
+}
+[data-theme='dark'] .rsc-stat-number {
+  color: var(--rsc-gold);
+}
+.rsc-stat-label {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+/* ── Flow Diagram ── */
+.rsc-flow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.25rem;
+  flex-wrap: nowrap;
+  margin: 2rem 0;
+}
+.rsc-flow-step {
+  background: var(--rsc-teal-light);
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  min-width: 0;
+  flex: 1 1 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.rsc-flow-step-num {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+  margin-bottom: 0.25rem;
+}
+.rsc-flow-step-desc {
+  opacity: 0.7;
+}
+.rsc-flow-step-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.rsc-flow-step-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+.rsc-flow-step-link-hint {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  margin-top: 0.35rem;
+  text-decoration: underline;
+}
+[data-theme='dark'] .rsc-flow-step-link-hint {
+  color: var(--rsc-gold);
+}
+.rsc-flow-arrow {
+  font-size: 1.5rem;
+  color: var(--ifm-color-primary);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+/* ── R² Bars ── */
+.rsc-r2-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+}
+.rsc-r2-bar-bg {
+  flex: 1;
+  height: 20px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+[data-theme='dark'] .rsc-r2-bar-bg {
+  background: #374151;
+}
+.rsc-r2-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+.rsc-r2-high { background: linear-gradient(90deg, #22c55e, #16a34a); }
+.rsc-r2-medium { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.rsc-r2-low { background: linear-gradient(90deg, #ef4444, #dc2626); }
+
+/* ── Insight Callout (gold) ── */
+.rsc-insight {
+  background: var(--rsc-gold-bg);
+  border-left: 4px solid var(--rsc-gold);
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+.rsc-insight strong {
+  color: var(--rsc-teal);
+}
+[data-theme='dark'] .rsc-insight strong {
+  color: var(--rsc-gold);
+}
+
+/* ── Scoring Ruler ── */
+.rsc-ruler {
+  position: relative;
+  height: 40px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1rem 0;
+  display: flex;
+}
+.rsc-ruler-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: white;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.rsc-ruler-red { background: #dc2626; }
+.rsc-ruler-orange { background: #f59e0b; }
+.rsc-ruler-green-light { background: #86efac; color: #166534; }
+.rsc-ruler-green { background: #22c55e; }
+
+/* ── Fit Level Cards ── */
+.rsc-fit-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+.rsc-fit-card {
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+}
+.rsc-fit-card-green { background: rgba(34, 197, 94, 0.1); border-color: #22c55e; color: #166534; }
+.rsc-fit-card-orange { background: rgba(245, 158, 11, 0.1); border-color: #f59e0b; color: #92400e; }
+.rsc-fit-card-red { background: rgba(220, 38, 38, 0.1); border-color: #dc2626; color: #991b1b; }
+
+[data-theme='dark'] .rsc-fit-card-green { color: #86efac; }
+[data-theme='dark'] .rsc-fit-card-orange { color: #fbbf24; }
+[data-theme='dark'] .rsc-fit-card-red { color: #fca5a5; }
+
+/* ── Comparison Table ── */
+.rsc-comparison {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.rsc-comparison table {
+  min-width: 600px;
+}
+.rsc-comparison th:last-child,
+.rsc-comparison td:last-child {
+  background: rgba(27, 126, 89, 0.08);
+  font-weight: 600;
+}
+[data-theme='dark'] .rsc-comparison th:last-child,
+[data-theme='dark'] .rsc-comparison td:last-child {
+  background: rgba(50, 196, 141, 0.08);
+}
+
+/* ── Calculator Page ── */
+.rsc-calc-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.rsc-calc-input {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.rsc-calc-results {
+  min-height: 400px;
+  overflow-x: hidden;
+}
+.rsc-calc-step {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+.rsc-calc-step h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.rsc-calc-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.rsc-calc-formula {
+  background: var(--rsc-teal-light);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85rem;
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  word-break: break-word;
+}
+[data-theme='dark'] .rsc-calc-formula {
+  background: rgba(27, 126, 89, 0.1);
+}
+.rsc-calc-explain {
+  background: var(--rsc-gold-bg);
+  border-left: 3px solid var(--rsc-gold);
+  padding: 0.75rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ── Slider inputs ── */
+.rsc-slider-group {
+  margin-bottom: 1.25rem;
+}
+.rsc-slider-group label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+.rsc-slider-group input[type="range"] {
+  width: 100%;
+  accent-color: var(--ifm-color-primary);
+}
+.rsc-slider-value {
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}
+
+/* ── Gender toggle ── */
+.rsc-gender-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--ifm-color-primary);
+  margin-bottom: 1.25rem;
+}
+.rsc-gender-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--ifm-color-primary);
+}
+.rsc-gender-btn.active {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
+/* ── Measurement grid ── */
+.rsc-meas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.rsc-meas-card {
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+.rsc-meas-card-name {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+.rsc-meas-card-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}
+.rsc-meas-card-unit {
+  font-size: 0.85rem;
+  font-weight: 400;
+  opacity: 0.6;
+}
+.rsc-meas-card-r2 {
+  margin-top: 0.4rem;
+}
+
+/* ── BMI bar ── */
+.rsc-bmi-bar {
+  height: 24px;
+  border-radius: 12px;
+  display: flex;
+  overflow: hidden;
+  margin: 0.75rem 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.rsc-bmi-under { background: #60a5fa; flex: 18.5; color: white; display: flex; align-items: center; justify-content: center; }
+.rsc-bmi-normal { background: #22c55e; flex: 6.5; color: white; display: flex; align-items: center; justify-content: center; }
+.rsc-bmi-over { background: #f59e0b; flex: 5; color: white; display: flex; align-items: center; justify-content: center; }
+.rsc-bmi-obese { background: #dc2626; flex: 10; color: white; display: flex; align-items: center; justify-content: center; }
+.rsc-bmi-marker {
+  position: relative;
+  height: 8px;
+}
+.rsc-bmi-dot {
+  position: absolute;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  background: var(--ifm-font-color-base);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  border: 2px solid white;
+}
+
+/* ── Contribution bar (stacked) ── */
+.rsc-contrib-bar {
+  display: flex;
+  height: 28px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+.rsc-contrib-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: white;
+  min-width: 2px;
+}
+
+/* ── Scoring size cards ── */
+.rsc-size-results {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+.rsc-size-card {
+  border-radius: 10px;
+  padding: 1rem;
+  min-width: 100px;
+  flex: 1;
+  text-align: center;
+  border: 2px solid;
+}
+.rsc-size-card-best {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+}
+.rsc-size-card-also {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+.rsc-size-card-not {
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+}
+.rsc-size-card-label {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.rsc-size-card-badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: white;
+  margin-top: 0.3rem;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Tablet (≤996px)
+   ══════════════════════════════════════════════ */
+@media (max-width: 996px) {
+  .rsc-calc-layout {
+    grid-template-columns: 280px 1fr;
+    gap: 1rem;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤768px)
+   ══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Hero */
+  .rsc-hero {
+    padding: 2rem 1.25rem;
+  }
+  .rsc-hero h1 {
+    font-size: 1.5rem;
+  }
+  .rsc-hero p {
+    font-size: 0.95rem;
+  }
+  .rsc-hero-cta {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Stats — single column */
+  .rsc-stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .rsc-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+    padding: 1rem;
+  }
+  .rsc-stat-number {
+    font-size: 1.8rem;
+    min-width: 60px;
+  }
+  .rsc-stat-label {
+    margin-top: 0;
+  }
+
+  /* Flow diagram — vertical */
+  .rsc-flow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .rsc-flow-step {
+    min-width: auto;
+    flex: none;
+  }
+  .rsc-flow-arrow {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0.15rem 0;
+    justify-content: center;
+  }
+  .rsc-flow-arrow::after {
+    content: "↓";
+  }
+  .rsc-flow-arrow > * {
+    display: none;
+  }
+
+  /* Calculator — single column */
+  .rsc-calc-layout {
+    grid-template-columns: 1fr;
+  }
+  .rsc-calc-input {
+    position: static;
+    max-height: none;
+  }
+  .rsc-calc-step {
+    padding: 1rem;
+  }
+
+  /* Measurement grid */
+  .rsc-meas-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+  .rsc-meas-card-value {
+    font-size: 1.2rem;
+  }
+
+  /* Size cards */
+  .rsc-size-card {
+    min-width: 80px;
+  }
+  .rsc-size-card-label {
+    font-size: 1.2rem;
+  }
+
+  /* Scoring ruler */
+  .rsc-ruler-zone {
+    font-size: 0.55rem;
+  }
+
+  /* Fit level cards */
+  .rsc-fit-cards {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Small mobile (≤480px)
+   ══════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .rsc-hero h1 {
+    font-size: 1.25rem;
+  }
+  .rsc-hero-cta {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .rsc-flow-step {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  .rsc-flow-step-num {
+    font-size: 1.1rem;
+  }
+
+  .rsc-meas-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .rsc-fit-cards {
+    grid-template-columns: 1fr;
+  }
+}

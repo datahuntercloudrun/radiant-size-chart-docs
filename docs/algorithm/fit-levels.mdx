@@ -1,0 +1,85 @@
+---
+sidebar_position: 6
+title: Niveles de Ajuste
+---
+
+import FitLevelCards from '@site/src/components/FitLevelCards';
+
+# Niveles de Ajuste (Fit Levels)
+
+El sistema de scoring produce un **fit level** (nivel de ajuste) para cada medida y un **fit level global** para cada talla. Estos niveles se traducen en las categorías que el usuario final ve.
+
+## Los 7 Niveles Internos
+
+| Nivel | Significado | Cuándo Ocurre |
+|---|---|---|
+| `very_tight` | Muy ajustado | >5cm sobre el máximo |
+| `tight` | Ajustado | 2-5cm sobre el máximo |
+| `slightly_tight` | Ligeramente ajustado | 0-2cm sobre el máximo, o 80-100% del rango |
+| `perfect` | Perfecto | 20-80% del rango |
+| `slightly_loose` | Ligeramente holgado | 0-2cm bajo el mínimo, o 0-20% del rango |
+| `loose` | Holgado | 2-5cm bajo el mínimo |
+| `very_loose` | Muy holgado | >5cm bajo el mínimo |
+
+## Las 3 Categorías del Usuario
+
+Los 7 niveles internos se simplifican en 3 categorías para la interfaz:
+
+<FitLevelCards />
+
+## La Regla del "Worst Wins"
+
+<div className="rsc-insight">
+<strong>En términos simples:</strong> Es como una cadena — solo es tan fuerte como su eslabón más débil. Si el pecho te queda perfecto pero la cintura es "muy ajustada", la talla completa se marca como "no recomendada". Porque no importa que el pecho quede bien si la camisa no te cierra en la cintura.
+</div>
+
+El fit level global de una talla es **el peor fit level de todas las medidas**:
+
+```
+overallFit = getWorstFitLevel([fitPecho, fitCintura, fitCadera, ...])
+```
+
+La prioridad de severidad (de peor a mejor):
+1. `very_tight` → no recomendado
+2. `very_loose` → no recomendado
+3. `tight` → también sirve (con reservas)
+4. `loose` → también sirve (con reservas)
+5. `slightly_tight` → perfecto (funciona)
+6. `slightly_loose` → perfecto (funciona)
+7. `perfect` → perfecto
+
+## Clasificación Final de Tallas
+
+Después del scoring, todas las tallas se ordenan por score (menor = mejor) y se clasifican:
+
+### 1. Mejor Opción (`best`)
+La talla con el score más bajo **siempre** se marca como "best", independientemente de su fit level. Esto garantiza que el usuario siempre reciba una recomendación.
+
+### 2. También Sirve (`also_fits`)
+Tallas con scores razonables y sin medidas en zona "very_tight" o "very_loose".
+
+### 3. No Recomendada (`not_recommended`)
+Tallas donde al menos una medida tiene un fit level de `very_tight` o `very_loose` (>5cm fuera del rango).
+
+## Ejemplo Visual
+
+Para un hombre de 175cm, 78kg, 30 años probando una camiseta:
+
+| Talla | Pecho | Cintura | Cadera | Score | Categoría |
+|---|---|---|---|---|---|
+| **M** | slightly_tight | perfect | perfect | 0.28 | **best** |
+| L | slightly_loose | slightly_loose | slightly_loose | 0.50 | also_fits |
+| S | tight | slightly_tight | tight | 0.65 | also_fits |
+| XL | very_loose | very_loose | very_loose | 1.20 | not_recommended |
+
+El usuario ve: **"Tu talla recomendada es M"** con la opción de ver L como alternativa.
+
+## Diseño Sin "No Match"
+
+A diferencia de otros sistemas que pueden decir "no encontramos tu talla", Radiant Size Chart **siempre** recomienda una talla. La talla con mejor score se marca como "best" incluso si todas las tallas tienen algún ajuste.
+
+Esto es intencional: es mejor decir "la M es tu mejor opción, aunque te quedará ligeramente ajustada en el pecho" que simplemente decir "no hay talla para ti".
+
+---
+
+**Siguiente:** [Precisión y Validación →](/algorithm/accuracy)

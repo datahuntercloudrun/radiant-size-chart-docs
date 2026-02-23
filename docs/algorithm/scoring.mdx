@@ -1,0 +1,100 @@
+---
+sidebar_position: 5
+title: Sistema de Scoring
+---
+
+import ScoringRuler from '@site/src/components/ScoringRuler';
+
+# Sistema de Scoring
+
+Una vez que tenemos las 22 medidas estimadas del usuario, necesitamos compararlas contra el size chart del comerciante para determinar la mejor talla. Aquí es donde entra el sistema de scoring.
+
+## La Regla Visual
+
+<ScoringRuler />
+
+## Cómo Funciona el Scoring
+
+Para cada medida del usuario, calculamos su **posición relativa** dentro del rango de la talla:
+
+```
+posición = (medida_usuario - min) / (max - min)
+```
+
+| Posición | Significado | Fit Level |
+|---|---|---|
+| 0.20 - 0.80 | Dentro del rango, zona cómoda | **perfect** |
+| 0.00 - 0.20 | Dentro del rango, cerca del mínimo | **slightly_loose** |
+| 0.80 - 1.00 | Dentro del rango, cerca del máximo | **slightly_tight** |
+| < 0 (0-2cm) | Fuera del rango, zona de gracia | **slightly_loose** |
+| < 0 (2-5cm) | Fuera del rango, ajuste posible | **loose** |
+| < 0 (>5cm) | Fuera del rango, no recomendado | **very_loose** |
+| > 1 (0-2cm) | Fuera del rango, zona de gracia | **slightly_tight** |
+| > 1 (2-5cm) | Fuera del rango, ajuste posible | **tight** |
+| > 1 (>5cm) | Fuera del rango, no recomendado | **very_tight** |
+
+## Zonas de Gracia: La Clave del Realismo
+
+<div className="rsc-insight">
+<strong>En términos simples:</strong> Si una camisa dice que cabe hasta 96cm de pecho, y tu pecho mide 97cm, ese 1cm de diferencia es como el ancho de tu dedo meñique. Te va a quedar bien. Pero si tu pecho mide 103cm (7cm de más), ahí sí no va a cerrar bien. Las zonas de gracia son esa "tolerancia" realista.
+</div>
+
+### Por Qué Existen
+
+La ropa no es rígida. Los tejidos tienen **elasticidad**, y los rangos de las tallas son **aproximados**. Un usuario que queda 1cm por encima del rango de la M probablemente le queda la M perfectamente.
+
+### Las 3 Zonas
+
+1. **0-2 cm fuera del rango**: Zona verde. La prenda sigue quedando bien. Se marca como `slightly_tight` o `slightly_loose` pero el score sigue siendo bajo.
+
+2. **2-5 cm fuera del rango**: Zona amarilla. La prenda queda pero puede no ser ideal. Se marca como `tight` o `loose`.
+
+3. **>5 cm fuera del rango**: Zona roja. `very_tight` o `very_loose`. Se activa el flag `hasNotRecommended` que marca esta talla como "no recomendada".
+
+## Cálculo del Score
+
+El score de cada medida se calcula así:
+
+**Dentro del rango:**
+```
+score = |posición - 0.5|
+```
+Un score de 0 significa que la medida cae exactamente en el centro del rango. Un score de 0.5 significa que está en el borde.
+
+**Fuera del rango (con gracia):**
+```
+score = base + overshoot
+
+// donde base = 0.3 (gracia), 0.5 (moderado), 1.0 (no recomendado)
+// overshoot = distancia normalizada fuera del rango
+```
+
+### Score Total de la Talla
+
+```
+score_talla = suma(scores_medidas) / cantidad_medidas
+```
+
+Se promedian los scores de todas las medidas disponibles. La talla con el **score más bajo** es la recomendada.
+
+## Ejemplo Concreto
+
+Usuario: pecho = 101cm, cintura = 82cm, cadera = 100cm
+
+**Talla M** (pecho: 92-100, cintura: 76-84, cadera: 96-102):
+- Pecho: 101cm está 1cm sobre el máximo → gracia → score = 0.3 + 0.125 = 0.425
+- Cintura: 82cm está en posición (82-76)/(84-76) = 0.75 → score = 0.25
+- Cadera: 100cm está en posición (100-96)/(102-96) = 0.67 → score = 0.17
+- **Score total: (0.425 + 0.25 + 0.17) / 3 = 0.282**
+
+**Talla L** (pecho: 100-108, cintura: 84-94, cadera: 102-108):
+- Pecho: 101cm está en posición (101-100)/(108-100) = 0.125 → score = 0.375
+- Cintura: 82cm está 2cm bajo el mínimo → gracia → score = 0.3 + 0.2 = 0.50
+- Cadera: 100cm está 2cm bajo el mínimo → gracia → score = 0.3 + 0.33 = 0.63
+- **Score total: (0.375 + 0.50 + 0.63) / 3 = 0.502**
+
+**Resultado: Talla M gana** (score 0.282 vs 0.502) con fit level "slightly_tight" por el pecho.
+
+---
+
+**Siguiente:** [Niveles de Ajuste →](/algorithm/fit-levels)

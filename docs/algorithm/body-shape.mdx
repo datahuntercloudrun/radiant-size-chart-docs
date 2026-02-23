@@ -1,0 +1,87 @@
+---
+sidebar_position: 4
+title: Forma Corporal
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
+# Ajustes de Forma Corporal
+
+## El Problema que Resuelven los Sliders
+
+La regresión lineal nos da una **estimación promedio** para alguien con cierta altura, peso y edad. Pero dos personas con las mismas características pueden tener cuerpos muy diferentes:
+
+- Una persona de 175cm y 80kg podría tener un **pecho de 95cm** (torso estrecho, peso en piernas)
+- Otra persona de 175cm y 80kg podría tener un **pecho de 107cm** (torso ancho, pectoral desarrollado)
+
+Los sliders capturan esta diferencia que la regresión sola no puede detectar.
+
+<div className="rsc-insight">
+<strong>En términos simples:</strong> Imagina dos personas que pesan y miden exactamente lo mismo. Una tiene hombros anchos y cintura estrecha (forma de V). La otra tiene hombros estrechos y más cintura (forma de rectángulo). Ambas necesitan tallas diferentes. Los sliders le preguntan al usuario: "¿Tu torso es más ancho o más estrecho que el promedio?"
+</div>
+
+## Los 3 Sliders
+
+| Slider | Medida afectada | Rango | SE calibrado (hombres) |
+|---|---|---|---|
+| **Torso** | Pecho/Busto | 1 (estrecho) → 5 (ancho) | ±3.06 cm por paso |
+| **Cintura** | Cintura | 1 (plano) → 5 (redondeado) | ±4.05 cm por paso |
+| **Cadera** | Cadera | 1 (estrecha) → 5 (ancha) | ±2.56 cm por paso |
+
+## La Fórmula del Ajuste
+
+```
+medida_ajustada = medida_predicha + (slider - 3) × SE
+```
+
+Donde:
+- `slider` va de 1 a 5 (default = 3 = sin ajuste)
+- `SE` es el error estándar específico de esa medida
+- Posición 1 = −2×SE, posición 5 = +2×SE
+
+### Por Qué Usamos SE
+
+Cada slider cubre **±2 desviaciones estándar**, lo que estadísticamente cubre el **95% de la variación individual** en esa medida. Esto significa que:
+
+- Un slider en posición 1 ("muy estrecho") corresponde al percentil ~2.5
+- Un slider en posición 5 ("muy ancho") corresponde al percentil ~97.5
+- Posiciones intermedias cubren distribuciones más probables
+
+<div className="rsc-insight">
+<strong>Diseño inteligente:</strong> La cintura tiene un SE de 4.05cm (vs 2.56cm de la cadera). Esto significa que el slider de cintura tiene <strong>más rango de ajuste</strong> que el de cadera — porque en la realidad, la cintura varía más entre personas del mismo peso que la cadera. El SE calibra automáticamente la sensibilidad de cada slider.
+</div>
+
+## Demo Interactiva
+
+Mueve el slider para ver cómo cambia la estimación del pecho:
+
+<BrowserOnly>
+  {() => {
+    const SliderDemo = require('@site/src/components/SliderDemo').default;
+    return <SliderDemo />;
+  }}
+</BrowserOnly>
+
+## La Curva de Campana
+
+El gráfico muestra una distribución normal. La línea dorada es la posición del slider.
+
+- En **posición 3** (centro), usamos la predicción directa de la regresión
+- Mover a la izquierda (1-2) asume un torso más estrecho que el promedio
+- Mover a la derecha (4-5) asume un torso más ancho que el promedio
+
+La campana ilustra que la **mayoría de la gente está cerca del centro** (posición 3), y los extremos (1 y 5) son menos comunes pero igualmente válidos.
+
+## Por Qué Solo 3 Sliders
+
+Podríamos agregar sliders para cada una de las 22 medidas, pero sería contraproducente:
+
+1. **UX**: El usuario no conoce su circunferencia de muslo. Pero sí sabe si tiene "caderas anchas o estrechas".
+2. **Correlación**: Muchas medidas están correlacionadas. Un torso ancho generalmente implica hombros más anchos también.
+3. **Impacto**: Pecho, cintura y cadera son las 3 medidas que **más influyen** en la recomendación de talla para la mayoría de prendas.
+
+Las demás medidas usan la predicción directa de la regresión, que ya es suficientemente precisa gracias a los altos R² del modelo.
+
+---
+
+**Siguiente:** [Sistema de Scoring →](/algorithm/scoring)

@@ -1,0 +1,84 @@
+---
+sidebar_position: 2
+title: Fundamento de Datos
+---
+
+import RSquaredTable from '@site/src/components/RSquaredTable';
+
+# ANSUR II: El Gold Standard de la Antropometría
+
+## Qué es ANSUR II
+
+**ANSUR II** (Anthropometric Survey of US Army Personnel, 2nd edition) es la encuesta antropométrica más completa y rigurosa del mundo moderno. Fue conducida en 2012 por el **Natick Soldier Research, Development and Engineering Center** del Ejército de los Estados Unidos.
+
+<div className="rsc-insight">
+<strong>Dato clave:</strong> ANSUR II es utilizado como referencia por la NASA, el Departamento de Defensa, fabricantes de equipamiento militar, la industria automotriz y ahora, gracias a Radiant Size Chart, por el e-commerce de moda.
+</div>
+
+## Escala del Dataset
+
+<div className="rsc-stats">
+  <div className="rsc-stat-card">
+    <div className="rsc-stat-number">4,082</div>
+    <div className="rsc-stat-label">Hombres medidos</div>
+  </div>
+  <div className="rsc-stat-card">
+    <div className="rsc-stat-number">1,986</div>
+    <div className="rsc-stat-label">Mujeres medidas</div>
+  </div>
+  <div className="rsc-stat-card">
+    <div className="rsc-stat-number">93</div>
+    <div className="rsc-stat-label">Medidas originales por sujeto</div>
+  </div>
+</div>
+
+## Por Qué Datos Militares Son Superiores
+
+No todos los datasets son iguales. ANSUR II es excepcional por 5 razones:
+
+### 1. Condiciones Controladas
+Cada sujeto fue medido en ropa interior estandarizada, de pie en posición anatómica, siguiendo un protocolo idéntico. No hay variabilidad por ropa, postura o equipo.
+
+### 2. Antropometristas Profesionales
+Las mediciones fueron realizadas por **antropometristas certificados** con años de experiencia. El margen de error inter-observador es mínimo (típicamente &lt;2mm).
+
+### 3. Equipamiento Estandarizado
+Se usaron instrumentos de precisión calibrados: antropómetros, cintas métricas de acero, calibres de pliegues cutáneos. No estimaciones visuales ni sensores consumer-grade.
+
+### 4. Diversidad Demográfica
+El Ejército de EE.UU. recluta de todos los estados, etnias y contextos socioeconómicos. ANSUR II captura una diversidad antropométrica que ningún estudio académico típico alcanza.
+
+### 5. Datos Públicos y Reproducibles
+A diferencia de datasets propietarios de empresas de moda, ANSUR II es **completamente público**. Cualquier investigador puede verificar nuestros resultados. Transparencia total.
+
+## De 93 Medidas a 22 Modelos
+
+De las 93 medidas originales, seleccionamos las **22 más relevantes para la industria de la moda** y construimos un modelo de regresión lineal multivariable para cada una.
+
+Cada modelo usa 4 variables predictoras:
+- **Altura** (cm) — la estructura ósea base
+- **Peso** (kg) — la masa total
+- **Edad** (años) — los cambios de composición corporal
+- **BMI** (kg/m²) — la distribución relativa del peso
+
+### Precisión de los 22 Modelos (Hombres)
+
+<RSquaredTable gender="male" />
+
+<div className="rsc-insight">
+<strong>Cómo leer R²:</strong> Un R² de 88% significa que nuestro modelo explica el 88% de la variación en esa medida entre 4,082 hombres. El 12% restante es la variabilidad individual que capturamos con los sliders de forma corporal.
+</div>
+
+## La Fórmula
+
+Cada medida se calcula con:
+
+```
+medida(cm) = intercept + coef_height × altura + coef_weight × peso + coef_age × edad + coef_bmi × BMI
+```
+
+Los coeficientes son fijos — calculados una vez con regresión sobre todo el dataset. No hay "entrenamiento" en runtime ni datos de usuario almacenados.
+
+---
+
+**Siguiente:** [Estimación Antropométrica (22 modelos) →](/algorithm/estimation)

@@ -1,0 +1,69 @@
+---
+sidebar_position: 1
+slug: /
+title: Visión General
+---
+
+import HeroBanner from '@site/src/components/HeroBanner';
+import StatCards from '@site/src/components/StatCards';
+import FlowDiagram from '@site/src/components/FlowDiagram';
+
+<HeroBanner />
+
+<StatCards />
+
+## El Problema: La Crisis de las Tallas en E-Commerce
+
+La ropa comprada online se devuelve **3 veces más** que la comprada en tienda. La razón principal: **el cliente no sabe qué talla elegir**.
+
+- **30-40%** de la ropa comprada online se devuelve
+- **70%** de esas devoluciones son por problemas de talla
+- Cada devolución cuesta al comerciante entre **$15-30 USD** en logística
+
+Las tablas de tallas estáticas no funcionan porque **dos personas con la misma altura y peso pueden tener cuerpos completamente diferentes**. Una acumula peso en la cintura, otra en el pecho. Las tablas no capturan esto.
+
+## Nuestra Solución: Ciencia Antropométrica Real
+
+Radiant Size Chart usa **regresión lineal multivariable** entrenada sobre la base de datos antropométrica más rigurosa del mundo: **ANSUR II** del Ejército de los Estados Unidos.
+
+Con solo **4 datos básicos** (altura, peso, edad, género), estimamos **22 medidas corporales** con precisión científicamente validada. Sin cámaras, sin hardware, sin fotos. Todo se calcula en el navegador del cliente.
+
+## Cómo Funciona: 5 Fases
+
+<FlowDiagram />
+
+### Fase 1: Datos Básicos
+El usuario ingresa su altura (cm), peso (kg), edad y género. Son los mismos datos que un médico pediría en una consulta básica.
+
+### Fase 2: BMI (Índice de Masa Corporal)
+Calculamos el BMI como variable predictora adicional. No lo usamos para "clasificar" al usuario — lo usamos porque mejora significativamente la precisión de las predicciones antropométricas. [Ver cómo se calcula →](/algorithm/estimation#1-calcular-bmi)
+
+### Fase 3: Estimación de 22 Medidas
+Cada medida se calcula con una fórmula de regresión lineal específica, calibrada con datos de 6,068 sujetos reales medidos profesionalmente. [Ver los 22 modelos completos →](/algorithm/estimation)
+
+### Fase 4: Ajuste de Forma Corporal
+Tres sliders permiten al usuario refinar su silueta (torso, cintura, cadera). Cada slider ajusta la medida usando el error estándar (SE) de la regresión — las medidas más variables tienen más rango de ajuste. [Ver cómo funcionan →](/algorithm/body-shape)
+
+### Fase 5: Scoring y Recomendación
+Las medidas estimadas se comparan contra cada talla del size chart del comerciante. Un sistema de scoring con **zonas de gracia** inteligentes determina la mejor talla. [Ver el sistema de scoring →](/algorithm/scoring)
+
+## Por Qué Funciona
+
+<div className="rsc-insight">
+<strong>La clave:</strong> No intentamos reinventar la rueda con IA generativa o computer vision. Usamos <strong>matemáticas probadas</strong> (regresión lineal) con <strong>datos excepcionales</strong> (ANSUR II). La combinación de un modelo simple con datos de alta calidad supera sistemáticamente a modelos complejos con datos mediocres.
+</div>
+
+## Diferenciadores Clave
+
+| Característica | Radiant Size Chart |
+|---|---|
+| **Datos** | ANSUR II — 6,068 sujetos medidos profesionalmente por el Ejército de EE.UU. |
+| **Medidas** | 22 medidas corporales estimadas (vs 2-3 de la competencia) |
+| **Forma corporal** | Sliders calibrados con error estándar científico |
+| **Hardware** | Cero — solo 4 números del usuario |
+| **Privacidad** | Máxima — todo se calcula client-side, sin fotos ni datos biométricos |
+| **Validación** | R² hasta 0.888, verificable y reproducible |
+
+---
+
+**Siguiente:** [Fundamento de Datos (ANSUR II) →](/algorithm/data-foundation)

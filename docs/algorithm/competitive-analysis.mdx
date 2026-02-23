@@ -1,0 +1,112 @@
+---
+sidebar_position: 8
+title: Análisis Competitivo
+---
+
+import ComparisonTable from '@site/src/components/ComparisonTable';
+
+# Análisis Competitivo
+
+## Panorama de Tecnologías de Sizing
+
+El mercado de recomendación de tallas en e-commerce tiene 6 enfoques principales. Radiant Size Chart ocupa un espacio único.
+
+<ComparisonTable />
+
+## Los 6 Enfoques
+
+### 1. Tablas Estáticas
+**Ejemplos:** La mayoría de tiendas online
+
+El enfoque más básico: una tabla HTML con tallas y rangos. El usuario debe **saber sus medidas** (que casi nadie sabe) y **interpretarlas** (que casi nadie hace bien).
+
+**Limitaciones:** No hay recomendación activa. El usuario puede quedarse entre dos tallas sin saber cuál elegir.
+
+### 2. Apps Simples (Cuestionarios)
+**Ejemplos:** Kiwi Sizing, EasySize
+
+Preguntan altura, peso y a veces "tipo de cuerpo" con opciones genéricas. Mapean directamente a una talla sin modelado antropométrico real.
+
+**Limitaciones:** Con solo 2-3 variables y sin base de datos científica, la precisión es limitada. Suelen usar heurísticas simples ("si BMI > 25, sube una talla").
+
+### 3. Machine Learning / SVM
+**Ejemplos:** True Fit, Fit Analytics (adquirida por Snap)
+
+Usan datos de compras y devoluciones para entrenar modelos. Necesitan **millones de transacciones** para ser precisos.
+
+**Limitaciones:**
+- Requieren grandes volúmenes de datos históricos (inviable para tiendas nuevas)
+- El "cold start problem": sin historial, no pueden recomendar
+- Los datos de devoluciones son ruidosos (se devuelve por color, no solo por talla)
+- Caja negra: imposible explicar por qué se recomienda una talla
+
+### 4. Deep Learning con Cámara
+**Ejemplos:** 3DLOOK, MySizeID
+
+El usuario se toma fotos (frente y perfil) y un modelo de deep learning estima medidas corporales.
+
+**Limitaciones:**
+- **Privacidad:** Requiere fotos del cuerpo del usuario — alta barrera de adopción
+- **Precisión variable:** Depende de iluminación, distancia, ropa, postura
+- **Fricción:** Muchos usuarios abandonan antes de tomarse las fotos
+- **Costo:** Inferencia GPU en servidor = alto costo operativo
+
+### 5. Escaneo 3D
+**Ejemplos:** Size Stream, TC², Fit3D
+
+Escáner corporal 3D en cabinas físicas. La máxima precisión posible (50+ medidas reales).
+
+**Limitaciones:**
+- Hardware de $10,000-50,000+
+- Solo funciona presencialmente
+- Completamente inviable para e-commerce
+
+### 6. Radiant Size Chart (Nuestro Enfoque)
+
+**El sweet spot:** Máxima precisión posible sin hardware, basado en la mejor base de datos disponible.
+
+## Nuestros 5 Diferenciadores
+
+### 1. Cero Hardware, Cero Fotos
+Solo necesitamos **4 números**: altura, peso, edad, género. Información que el usuario conoce sin medirse.
+
+### 2. 22 Medidas (No 2-3)
+Mientras la competencia estima pecho y cintura, nosotros estimamos **22 medidas** incluyendo bícep, muslo, cuello, tobillo y más. Esto permite recomendaciones precisas para **cualquier tipo de prenda**.
+
+### 3. Base de Datos del Ejército de EE.UU.
+No usamos datos genéricos ni encuestas voluntarias. Usamos **ANSUR II**: 6,068 sujetos medidos profesionalmente con equipamiento de precisión en condiciones controladas.
+
+### 4. Forma Corporal Calibrada Científicamente
+Nuestros sliders no son "opciones genéricas". Cada slider está calibrado con el **error estándar real** de cada medida, cubriendo ±2σ (95% de la población).
+
+### 5. Client-Side y Privacidad Máxima
+Todo el cálculo se ejecuta en el **navegador del usuario**. Ninguna medida corporal se envía a ningún servidor. Cero datos biométricos almacenados.
+
+## Por Qué Regresión Lineal Supera a ML Complejo
+
+Puede parecer contradictorio, pero un modelo simple con datos excepcionales supera sistemáticamente a un modelo complejo con datos mediocres:
+
+<div className="rsc-insight">
+<strong>Principio fundamental:</strong> La calidad de los datos importa más que la complejidad del modelo. Regresión lineal sobre ANSUR II (R²=0.888 para cadera) es más precisa y verificable que un random forest entrenado sobre datos de devoluciones ruidosos.
+</div>
+
+| Aspecto | Regresión (nosotros) | ML complejo (competencia) |
+|---|---|---|
+| **Explicabilidad** | Total — fórmula abierta | Caja negra |
+| **Reproducibilidad** | Cualquiera puede verificar | Propietario |
+| **Cold start** | Funciona desde el día 1 | Necesita meses de datos |
+| **Costo de inferencia** | ~0 (client-side) | Servidor GPU |
+| **Datos necesarios** | 0 (pre-entrenado) | Millones de transacciones |
+| **Sesgo** | Controlado (datos militares) | Alto (sesgos de compra) |
+
+## Resumen
+
+Radiant Size Chart combina lo mejor de dos mundos:
+- La **precisión científica** del mejor dataset antropométrico del mundo
+- La **accesibilidad** de una solución sin hardware
+
+No necesitamos IA generativa, computer vision ni millones de datos de usuarios. Necesitamos matemáticas sólidas y datos excepcionales. Y eso es exactamente lo que tenemos.
+
+---
+
+**Pruébalo tú mismo:** [Calculadora Interactiva →](/algorithm/calculator)

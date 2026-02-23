@@ -1,0 +1,253 @@
+---
+sidebar_position: 3
+title: Estimación Antropométrica
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
+# Los 22 Modelos de Regresión
+
+Cada medida corporal se estima con una **regresión lineal multivariable** específica. Aquí están los 22 modelos completos con sus coeficientes, precisión y fórmulas.
+
+## ¿De dónde salen las fórmulas?
+
+ANSUR II no nos da fórmulas — nos da **datos crudos**: las medidas reales de 6,068 personas (altura, peso, edad y 93 medidas corporales de cada una, tomadas con cinta métrica por antropometristas profesionales).
+
+**Nosotros** generamos las fórmulas aplicando **regresión lineal** sobre esos datos. La regresión es un método matemático que encuentra los coeficientes (multiplicadores) que producen el menor error posible al predecir una medida a partir de las otras variables.
+
+Por ejemplo, para predecir el pecho, la regresión analiza las 6,068 filas y encuentra que la fórmula que menos se equivoca es:
+
+```
+Pecho = 23.75 + 0.153 × altura + 0.167 × peso + 0.107 × edad + 1.361 × BMI
+```
+
+Los números `23.75`, `0.153`, `0.167`, `0.107` y `1.361` son los coeficientes óptimos — los que minimizan el error total sobre las 6,068 personas. Una vez calculados, quedan **fijos** en el código de la app como constantes. La app no recalcula nada en tiempo real, solo aplica la fórmula con los datos del usuario.
+
+Este proceso se repite para cada una de las 22 medidas corporales, generando 22 fórmulas independientes.
+
+## ¿Qué son R² y SE?
+
+R² y SE son las dos métricas que miden la calidad de cada fórmula. Para entenderlas, vamos a recorrer un ejemplo numérico completo.
+
+### Los datos de partida
+
+Imaginemos 5 personas del dataset ANSUR II con diferente estatura, cuyo pecho fue medido con cinta métrica:
+
+| Persona | Altura | Pecho real (medido) |
+|---------|--------|---------------------|
+| A | 160 cm | 93 cm |
+| B | 170 cm | 99 cm |
+| C | 175 cm | 100 cm |
+| D | 180 cm | 104 cm |
+| E | 190 cm | 104 cm |
+
+El pecho promedio de las 5 personas es **100 cm**.
+
+---
+
+### Paso 1: Sin fórmula — usar el promedio
+
+Si no tuviéramos ninguna fórmula, lo mejor que podríamos hacer es decirle a todos: "tu pecho mide 100cm" (el promedio). ¿Cuánto nos equivocamos?
+
+| Persona | Real | Promedio | Error | Error² |
+|---------|------|----------|-------|--------|
+| A | 93 | 100 | -7 | 49 |
+| B | 99 | 100 | -1 | 1 |
+| C | 100 | 100 | 0 | 0 |
+| D | 104 | 100 | +4 | 16 |
+| E | 104 | 100 | +4 | 16 |
+| | | | **Total** | **82** |
+
+**¿Por qué elevamos al cuadrado?** Porque si sumamos los errores directamente (-7 + -1 + 0 + 4 + 4 = 0), los negativos cancelan a los positivos y parece que no hay error. Esto ocurre siempre: la suma de desviaciones respecto al promedio es siempre cero por definición matemática. Elevar al cuadrado elimina los signos negativos y penaliza más los errores grandes.
+
+Esos **82** se llaman **SS_tot** (suma de cuadrados total). Representan toda la variación que existe en los datos — es lo peor que podemos hacer.
+
+---
+
+### Paso 2: Con fórmula — usar la regresión
+
+La regresión analizó las 5 personas y encontró que la fórmula que mejor predice el pecho a partir de la altura es:
+
+```
+Pecho = 30 + 0.4 × altura
+```
+
+Ahora aplicamos esta fórmula a cada persona:
+
+| Persona | Altura | Fórmula (30 + 0.4 × altura) | Real | Error | Error² |
+|---------|--------|------|------|-------|--------|
+| A | 160 | 30 + 0.4×160 = **94** | 93 | +1 | 1 |
+| B | 170 | 30 + 0.4×170 = **98** | 99 | -1 | 1 |
+| C | 175 | 30 + 0.4×175 = **100** | 100 | 0 | 0 |
+| D | 180 | 30 + 0.4×180 = **102** | 104 | -2 | 4 |
+| E | 190 | 30 + 0.4×190 = **106** | 104 | +2 | 4 |
+| | | | | **Total** | **10** |
+
+Esos **10** se llaman **SS_res** (suma de cuadrados residual). Es el error que queda después de usar la fórmula. Mucho menos que los 82 del promedio.
+
+---
+
+### Paso 3: Calcular R²
+
+```
+R² = 1 - (SS_res / SS_tot)
+R² = 1 - (10 / 82)
+R² = 1 - 0.122
+R² = 0.878 ≈ 88%
+```
+
+**¿Qué significa cada parte?**
+
+- **SS_res / SS_tot = 10 / 82 = 12.2%** → La fórmula dejó sin explicar el 12.2% de la variación
+- **1 - 0.122 = 87.8%** → La fórmula explica el 87.8% de la variación
+
+Dicho de otra forma: la variación original era 82. Después de aplicar la fórmula, solo quedaron 10 sin explicar. La fórmula eliminó 72 de los 82 puntos de error (72/82 = 87.8%).
+
+<div className="rsc-insight">
+<strong>En términos simples:</strong> R² = 0.88 significa que nuestra fórmula es casi <strong>8 veces mejor</strong> que simplemente decirle a todos "tu pecho mide 100cm". Captura la gran mayoría de la variación predecible. El 12% restante depende de factores que no medimos (genética, composición muscular/grasa, estructura ósea) — para eso existen los sliders de forma corporal.
+</div>
+
+### Escala de R²
+
+- **R² > 0.70** → Excelente para aplicaciones antropométricas
+- **R² 0.50 - 0.70** → Buena, útil complementada con los sliders de ajuste
+- **R² < 0.50** → Limitada, pero aún mejor que no tener dato
+
+---
+
+### Paso 4: Calcular SE (Error Estándar)
+
+El SE sale de los mismos errores de la fórmula. Es la raíz cuadrada del promedio de los errores al cuadrado:
+
+```
+SE = √(SS_res / n) = √(10 / 5) = √2 = 1.41 cm
+```
+
+Esto significa que la fórmula se equivoca **típicamente** por ~1.4 cm. Gracias a las propiedades de la distribución normal:
+
+- **68% de las veces** → el error es menor a 1×SE (±1.4 cm)
+- **95% de las veces** → el error es menor a 2×SE (±2.8 cm)
+- **99.7% de las veces** → el error es menor a 3×SE (±4.2 cm)
+
+En nuestros modelos reales con 6,068 personas y 4 variables (altura, peso, edad, BMI), el SE del pecho es **3.06 cm** — más alto que en este ejemplo simplificado porque hay mucha más variación real entre miles de personas.
+
+<div className="rsc-insight">
+<strong>¿Por qué importa?</strong> Un size chart típico tiene rangos de 4-6cm por talla (ej: M = 96-100cm, L = 100-108cm). Nuestro SE de 3.06cm para pecho significa que en la gran mayoría de los casos ubicamos correctamente en la talla. Si el rango entre tallas fuera de 1cm, nuestro error sería inútil. Pero como las tallas son rangos amplios, funciona.
+</div>
+
+---
+
+### Paso 5: Cómo los sliders reducen el SE
+
+El SE representa el error que **la fórmula sola no puede eliminar** — ese 12% de variación que depende de factores que no medimos (genética, distribución de grasa/músculo, estructura ósea). Aquí es donde entran los **sliders de forma corporal**.
+
+**La idea clave:** Aunque no podemos medir esos factores directamente, el propio usuario sí sabe si tiene un torso ancho o estrecho, una cintura plana o redondeada. Los sliders le permiten comunicar esa información.
+
+Cada slider está **calibrado directamente con el SE** de su medida correspondiente:
+
+| Slider | SE de la medida | Posición 1 | Posición 3 (neutro) | Posición 5 |
+|--------|----------------|------------|---------------------|------------|
+| Torso (pecho) | 3.06 cm | -2×3.06 = **-6.12 cm** | sin ajuste | +2×3.06 = **+6.12 cm** |
+| Cintura | 4.05 cm | -2×4.05 = **-8.10 cm** | sin ajuste | +2×4.05 = **+8.10 cm** |
+| Cadera | 2.56 cm | -2×2.56 = **-5.12 cm** | sin ajuste | +2×2.56 = **+5.12 cm** |
+
+La fórmula del ajuste es:
+
+```
+medida_ajustada = medida_predicha + (slider - 3) × SE
+```
+
+**Ejemplo concreto con el pecho:**
+
+La fórmula predice un pecho de **101 cm** para alguien de 175cm, 78kg, 30 años. Pero esa persona sabe que tiene un torso ancho (se describe como "algo ancho"), así que mueve el slider a posición **4**:
+
+```
+pecho_ajustado = 101 + (4 - 3) × 3.06 = 101 + 3.06 = 104.06 cm
+```
+
+Si otra persona con las mismas medidas tiene un torso estrecho (posición **2**):
+
+```
+pecho_ajustado = 101 + (2 - 3) × 3.06 = 101 - 3.06 = 97.94 cm
+```
+
+**¿Por qué ±2×SE?** Porque estadísticamente, el rango de ±2 desviaciones estándar cubre el **95% de la población**. Un slider en posición 1 (mínimo) equivale al percentil ~2.5, y posición 5 (máximo) al percentil ~97.5. Esto significa que solo el 5% de las personas tendrían un torso más extremo que lo que los sliders pueden capturar.
+
+<div className="rsc-insight">
+<strong>En resumen:</strong> La fórmula de regresión predice el valor promedio para alguien con tu altura, peso y edad (R² = 88%). Los sliders te permiten ajustar ese valor según tu forma corporal específica, cubriendo el 95% de la variación restante. Juntos — fórmula + sliders — el sistema cubre prácticamente toda la variación predecible en medidas corporales.
+</div>
+
+Para más detalle sobre los sliders, ver [Ajustes de Forma Corporal →](/algorithm/body-shape).
+
+## Cómo Leer los Coeficientes
+
+Cada fila de la tabla es un modelo independiente. Al hacer click en **▼** se expande la fórmula completa con los 4 coeficientes (altura, peso, edad, BMI) y el intercepto.
+
+## Tabla Interactiva de Coeficientes
+
+<BrowserOnly>
+  {() => {
+    const CoefficientTable = require('@site/src/components/CoefficientTable').default;
+    return <CoefficientTable gender="male" />;
+  }}
+</BrowserOnly>
+
+## Ejemplo Paso a Paso
+
+Calculemos el **pecho** para un hombre de 175cm, 78kg, 30 años:
+
+### 1. Calcular BMI
+
+```
+BMI = peso / (altura_m)²
+BMI = 78 / (1.75)² = 78 / 3.0625 = 25.47
+```
+
+### 2. Aplicar la Fórmula
+
+```
+Pecho = 23.7502
+      + 0.153339 × 175     (altura)
+      + 0.166746 × 78      (peso)
+      + 0.107301 × 30      (edad)
+      + 1.361460 × 25.47   (BMI)
+```
+
+### 3. Calcular Cada Término
+
+| Variable | Coeficiente | Valor | Contribución |
+|---|---|---|---|
+| Intercept | 23.7502 | — | +23.75 cm |
+| Altura | 0.153339 | 175 cm | +26.83 cm |
+| Peso | 0.166746 | 78 kg | +13.01 cm |
+| Edad | 0.107301 | 30 años | +3.22 cm |
+| BMI | 1.361460 | 25.47 | +34.68 cm |
+| **Total** | | | **101.49 cm** |
+
+### 4. Interpretar
+
+El pecho predicho es **~101 cm**, con un error estándar de **±3.06 cm**.
+
+Esto significa que el 68% de los hombres con estas características tendrán un pecho entre 98-105 cm, y el 95% estará entre 95-108 cm.
+
+<div className="rsc-insight">
+<strong>Contexto:</strong> Un size chart típico tiene rangos de 6-8cm por talla (ej: M = 96-100cm, L = 100-108cm). Nuestro SE de 3.06cm nos permite ubicar correctamente en la talla en la gran mayoría de los casos.
+</div>
+
+## Agrupación por Zona Corporal
+
+### Torso (7 medidas)
+Las medidas del torso son las más críticas para la recomendación de tallas de camisas, camisetas y chaquetas. **Pecho, cintura y cadera** tienen los R² más altos (87-89%) porque están fuertemente correlacionadas con altura y peso.
+
+### Extremidades Superiores (5 medidas)
+Manga, bícep, antebrazo, muñeca y ancho de hombros. La manga (R²=64%) depende principalmente de la altura. El bícep (R²=71%) está más influenciado por el peso y BMI.
+
+### Extremidades Inferiores (5 medidas)
+Entrepierna, muslo, pantorrilla, tobillo y ancho de cadera. La entrepierna (R²=75%) tiene una correlación muy alta con la altura — las piernas largas van con personas altas.
+
+### Otros (5 medidas)
+Pie (largo y ancho), cabeza, mano (circunferencia y largo). Estas medidas tienen R² más bajos pero siguen siendo útiles para calzado y accesorios.
+
+---
+
+**Siguiente:** [Ajustes de Forma Corporal →](/algorithm/body-shape)

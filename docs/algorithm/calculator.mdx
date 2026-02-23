@@ -1,0 +1,17 @@
+---
+sidebar_position: 9
+title: Calculadora Interactiva
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+
+# Calculadora Interactiva
+
+Modifica los valores y observa en tiempo real cómo el algoritmo calcula cada medida, aplica los ajustes y determina la talla recomendada. Cada paso está explicado en detalle.
+
+<BrowserOnly>
+  {() => {
+    const CalculatorApp = require('@site/src/components/CalculatorApp').default;
+    return <CalculatorApp />;
+  }}
+</BrowserOnly>
